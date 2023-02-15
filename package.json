@@ -1,0 +1,23 @@
+{
+  "name": "7daysofcode-wordle",
+  "version": "1.0.0",
+  "description": "Desafio 7 Days Of Code - Wordle",
+  "main": "scripts.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laisfrigerio/7daysofcode-wordle-js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/laisfrigerio/7daysofcode-wordle-js/issues"
+  },
+  "homepage": "https://github.com/laisfrigerio/7daysofcode-wordle-js#readme",
+  "devDependencies": {
+    "jest": "^29.4.1"
+  }
+}

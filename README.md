@@ -1,7 +1,7 @@
 # 7 Days of Code - Clone Wordle Game
 
 <p align="center">
-    <img src="./resources/images/logo.svg" width="150" height="150"/>
+    <img src="./resources/assets/images/logo.svg" width="150" height="150"/>
 </p>
 
 Esse projeto foi idealizado por mim para o desafio de 7 dias de código, em parceria com a Alura - uma empresa de educação em tecnologia.

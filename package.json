@@ -4,7 +4,8 @@
   "description": "Desafio 7 Days Of Code - Wordle",
   "main": "scripts.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "jsdom": "^21.1.0"
   },
   "repository": {
     "type": "git",
@@ -12,7 +13,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/laisfrigerio/7daysofcode-wordle-js/issues"
   },

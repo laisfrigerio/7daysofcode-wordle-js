@@ -1,3 +1,15 @@
+const KEY_BACKSPACE = 'Backspace'
+const KEY_ENTER = 'Enter'
+const KEY_DELETE = 'Delete'
+
+const isEnterKeyPressed = (pressedKey) => {
+    return pressedKey === KEY_ENTER
+}
+
+const isBackspaceKeyPressed = (pressedKey) => {
+    return [KEY_BACKSPACE, KEY_DELETE].includes(pressedKey)
+}
+
 const getOneRandomWord = (wordsList) => {
     const countWords = wordsList.length
     const shuffleIndex = Math.floor(Math.random() * countWords)
@@ -20,6 +32,8 @@ const start = () => {
     if (isTestEnviroment()) {
         module.exports = {
             getOneRandomWord,
+            isBackspaceKeyPressed,
+            isEnterKeyPressed,
             isTestEnviroment,
             loadWords
         }

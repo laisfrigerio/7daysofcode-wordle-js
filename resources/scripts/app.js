@@ -13,12 +13,12 @@ const gameInitialConfig = {
     rightGuess: ''
 }
 
-const isEnterKeyPressed = (pressedKey) => {
-    return pressedKey === KEY_ENTER
-}
-
 const isBackspaceKeyPressed = (pressedKey) => {
     return [KEY_BACKSPACE, KEY_DELETE].includes(pressedKey)
+}
+
+const isEnterKeyPressed = (pressedKey) => {
+    return pressedKey === KEY_ENTER
 }
 
 const isOneAlphabeticLetter = (pressedKey) => {
@@ -29,6 +29,10 @@ const isValidKeyPressed = (pressedKey) => {
     return isEnterKeyPressed(pressedKey) 
             || isBackspaceKeyPressed(pressedKey)
             || isOneAlphabeticLetter(pressedKey)
+}
+
+const isGuessInDatabase = (guess, database) => {
+    return database.includes(guess.toLowerCase())
 }
 
 const reachMaxLetterPerRow = (currentLetterPosition) => {
@@ -62,6 +66,7 @@ const start = () => {
         module.exports = {
             getOneRandomWord,
             isBackspaceKeyPressed,
+            isGuessInDatabase,
             isEnterKeyPressed,
             isValidKeyPressed,
             isTestEnviroment,

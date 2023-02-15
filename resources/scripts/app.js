@@ -115,6 +115,7 @@ const start = () => {
             nextGuess,
             displayLetterOnTheBoard,
             removeLetterFromBoard,
+            removeLastLetter,
             getOneRandomWord,
             isBackspaceKeyPressed,
             isCurrentGuessEmpty,

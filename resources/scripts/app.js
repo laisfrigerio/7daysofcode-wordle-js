@@ -1,6 +1,17 @@
+const MAX_LETTE_PER_ROW = 5
+const MAX_ATTEMPTS = 6
+
 const KEY_BACKSPACE = 'Backspace'
 const KEY_ENTER = 'Enter'
 const KEY_DELETE = 'Delete'
+
+const gameInitialConfig = {
+    database: [],
+    currentRow: 1,
+    currentLetterPosition: 1,
+    currentGuess: '',
+    rightGuess: ''
+}
 
 const isEnterKeyPressed = (pressedKey) => {
     return pressedKey === KEY_ENTER
@@ -18,6 +29,14 @@ const isValidKeyPressed = (pressedKey) => {
     return isEnterKeyPressed(pressedKey) 
             || isBackspaceKeyPressed(pressedKey)
             || isOneAlphabeticLetter(pressedKey)
+}
+
+const reachMaxLetterPerRow = (currentLetterPosition) => {
+    return currentLetterPosition > MAX_LETTE_PER_ROW
+}
+
+const reachMaxAttempts = (currentRow) => {
+    return currentRow > MAX_ATTEMPTS
 }
 
 const getOneRandomWord = (wordsList) => {
@@ -46,7 +65,9 @@ const start = () => {
             isEnterKeyPressed,
             isValidKeyPressed,
             isTestEnviroment,
-            loadWords
+            loadWords,
+            reachMaxAttempts,
+            reachMaxLetterPerRow
         }
 
         return

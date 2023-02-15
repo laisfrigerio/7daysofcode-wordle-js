@@ -8,6 +8,9 @@ const KEY_DELETE = 'Delete'
 const NOTIFICATION_DISPLAY_LETTER_SUCCESSFULLY = 'Showing letter with success'
 const NOTIFICATION_BACKSPACE_KEY_PRESSED = 'Backspace key pressed'
 const NOTIFICATION_ENTER_KEY_PRESSED = 'Enter key pressed'
+const NOTIFICATION_EMPTY_GUESS = 'Empty guess'
+const NOTIFICATION_INCOMPLETE_GUESS = 'Incomplete guess'
+const NOTIFICATION_WORD_NOT_IN_DATABASE = 'Word not in database'
 
 const gameInitialConfig = {
     database: [],
@@ -65,14 +68,6 @@ const removeLastLetter = (currentGuess) => {
     return currentGuess.slice(0, currentGuess.length - 1)
 }
 
-const nextGuess = (game) => {
-    game.currentRow++
-    game.currentGuess = ''
-    game.currentLetterPosition = 1
-
-    return NOTIFICATION_ENTER_KEY_PRESSED
-}
-
 const removeLetterFromBoard = (game) => {
     const { currentGuess, currentRow, currentLetterPosition } = game
 
@@ -97,6 +92,32 @@ const displayLetterOnTheBoard = (game, pressedKey) => {
     return NOTIFICATION_DISPLAY_LETTER_SUCCESSFULLY
 }
 
+const nextGuess = (game) => {
+    game.currentRow++
+    game.currentGuess = ''
+    game.currentLetterPosition = 1
+
+    return NOTIFICATION_ENTER_KEY_PRESSED
+}
+
+const checkGuess = (game) => {
+    const { database, currentLetterPosition, currentGuess } = game
+
+    if (isCurrentGuessEmpty(currentGuess)) {
+        return NOTIFICATION_EMPTY_GUESS
+    }
+
+    if (!reachMaxLetterPerRow(currentLetterPosition)) {
+        return NOTIFICATION_INCOMPLETE_GUESS
+    }
+
+    if (!isGuessInDatabase(currentGuess, database)) {
+        return NOTIFICATION_WORD_NOT_IN_DATABASE
+    }
+
+    return nextGuess(game)
+}
+
 const loadWords = async () => {
     return fetch('./resources/assets/json/database.json')
                     .then((response) => response.json())
@@ -112,6 +133,7 @@ const isTestEnviroment = () => {
 const start = () => {
     if (isTestEnviroment()) {
         module.exports = {
+            checkGuess,
             nextGuess,
             displayLetterOnTheBoard,
             removeLetterFromBoard,

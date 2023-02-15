@@ -35,6 +35,10 @@ const isGuessInDatabase = (guess, database) => {
     return database.includes(guess.toLowerCase())
 }
 
+const isCurrentGuessEmpty = (currentGuess) => {
+    return currentGuess === ''
+}
+
 const reachMaxLetterPerRow = (currentLetterPosition) => {
     return currentLetterPosition > MAX_LETTE_PER_ROW
 }
@@ -66,6 +70,7 @@ const start = () => {
         module.exports = {
             getOneRandomWord,
             isBackspaceKeyPressed,
+            isCurrentGuessEmpty,
             isGuessInDatabase,
             isEnterKeyPressed,
             isValidKeyPressed,

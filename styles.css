@@ -1,0 +1,118 @@
+:root {
+    --bg: #14161C;
+    --yellow: #F9FF00;
+    --white: #fff;
+    --border-color: #585858;
+
+    --notification-green-text: #2B5028;
+    --notification-green-bg: #538D4E;
+
+    --notification-red-text: #5F0F1D;
+    --notification-red-bg: #BA4747;
+
+    --letter-green-bg: #538D4E;
+    --letter-yellow-bg: #B59F3B;
+    --letter-gray-bg: #585858;
+
+    --keyboard-gray-light: #818384;
+    --keyboard-gray-dark: #585858;
+}
+
+* {
+    border: 0;
+    color: var(--white);
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg);
+} 
+
+.header {
+    border-bottom: 1px solid var(--border-color);
+    height: 80px;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+header {
+    align-items: center;
+    display: flex;
+    height: inherit;
+    margin: 0 auto;
+    max-width: 992px;
+}
+
+main {
+    margin: 85px auto 0;
+    max-width: 992px;
+}
+
+/* Board */
+
+.board-game {
+    margin: 200px auto 0;
+    width: 330px;
+}
+
+.board-game .row {
+    display: grid;
+    gap: 5px;
+    grid-template-columns: 62px 62px 62px 62px 62px;
+    height: 62px;
+    margin-bottom: 5px;
+}
+
+.board-game .letter {
+    border: 1px solid var(--border-color);
+}
+
+.board-game .letter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    text-transform: capitalize;
+    font-weight: bold;
+}
+
+/* Keyboard */
+
+.keyboard {
+    margin: 50px auto 0;
+}
+
+.keyboard .row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.keyboard .letter,
+.keyboard .action {
+    align-items: center;
+    background-color: var(--keyboard-gray-light);
+    cursor: pointer;
+    display: flex;
+    font-size: 22px;
+    height: 58px;
+    justify-content: center;
+    transition: filter 0.2s;
+    width: 43px;
+}
+
+.keyboard .letter:hover,
+.keyboard .action:hover {
+    filter: brightness(0.8);
+}
+
+.keyboard .enter {
+    font-size: 17px;
+    width: 83px;
+}

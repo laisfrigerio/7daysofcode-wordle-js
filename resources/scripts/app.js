@@ -10,6 +10,16 @@ const isBackspaceKeyPressed = (pressedKey) => {
     return [KEY_BACKSPACE, KEY_DELETE].includes(pressedKey)
 }
 
+const isOneAlphabeticLetter = (pressedKey) => {
+    return pressedKey.length === 1 && /[A-Za-z]/.test(pressedKey)
+}
+
+const isValidKeyPressed = (pressedKey) => {
+    return isEnterKeyPressed(pressedKey) 
+            || isBackspaceKeyPressed(pressedKey)
+            || isOneAlphabeticLetter(pressedKey)
+}
+
 const getOneRandomWord = (wordsList) => {
     const countWords = wordsList.length
     const shuffleIndex = Math.floor(Math.random() * countWords)
@@ -34,6 +44,7 @@ const start = () => {
             getOneRandomWord,
             isBackspaceKeyPressed,
             isEnterKeyPressed,
+            isValidKeyPressed,
             isTestEnviroment,
             loadWords
         }

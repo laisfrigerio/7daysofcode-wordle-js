@@ -60,6 +60,10 @@ const isCurrentGuessEmpty = (currentGuess) => {
     return currentGuess === ''
 }
 
+const isCorrectGuess = (currentGuess, rightGuess) => {
+    return rightGuess === currentGuess
+}
+
 const reachMaxLetterPerRow = (currentLetterPosition) => {
     return currentLetterPosition > MAX_LETTE_PER_ROW
 }
@@ -174,6 +178,7 @@ const start = () => {
             removeLastLetter,
             getOneRandomWord,
             isBackspaceKeyPressed,
+            isCorrectGuess,
             isCurrentGuessEmpty,
             isGuessInDatabase,
             isEnterKeyPressed,

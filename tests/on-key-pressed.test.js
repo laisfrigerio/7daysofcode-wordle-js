@@ -2,27 +2,34 @@ const { JSDOM } = require('jsdom')
 const path = require('path')
 const app = require('../resources/scripts/app')
 
-const NOTIFICATION_DISPLAY_LETTER_SUCCESSFULLY = 'Showing letter with success'
-const NOTIFICATION_BACKSPACE_KEY_PRESSED = 'Backspace key pressed'
-const NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS = 'Could not erase when is an empty guess'
-const NOTIFICATION_EMPTY_GUESS = 'Empty guess'
-const NOTIFICATION_ENTER_KEY_PRESSED = 'Enter key pressed'
-const NOTIFICATION_INCOMPLETE_GUESS = 'Incomplete guess'
-const NOTIFICATION_INVALID_PRESSED_KEY = 'Invalid Pressed Key'
-const NOTIFICATION_REACH_MAX_ATTEMPTS = 'Reach Max Attempts'
-const NOTIFICATION_REACH_MAX_LETTERS_PER_ROW = 'Reach Max letter per row'
-const NOTIFICATION_WORD_NOT_IN_DATABASE = 'Word not in database'
-const NOTIFICATION_GAME_OVER_GUESS_RIGHT = 'You guessed right! Game over!'
+const {
+    NOTIFICATION_DISPLAY_LETTER_SUCCESSFULLY,
+    NOTIFICATION_BACKSPACE_KEY_PRESSED,
+    NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS,
+    NOTIFICATION_EMPTY_GUESS,
+    NOTIFICATION_ENTER_KEY_PRESSED,
+    NOTIFICATION_INCOMPLETE_GUESS,
+    NOTIFICATION_INVALID_PRESSED_KEY,
+    NOTIFICATION_REACH_MAX_ATTEMPTS,
+    NOTIFICATION_REACH_MAX_LETTERS_PER_ROW,
+    NOTIFICATION_WORD_NOT_IN_DATABASE,
+    NOTIFICATION_GAME_OVER_GUESS_RIGHT,
+    GREEN_COLOR_RGB,
+    KEY_BACKSPACE,
+    KEY_ENTER,
+    KEY_DELETE,
+} = require('./aux/consts')
 
-const KEY_BACKSPACE = 'Backspace'
-const KEY_ENTER = 'Enter'
-const KEY_DELETE = 'Delete'
+const { getGameBoardLetter } = require('./aux/helpers')
 
-const GREEN_COLOR_RGB = 'rgb(83, 141, 78)'
-
-const getGameBoardLetter = (index) => {
-    return global.document.querySelector(`.letter-${index}`).style.backgroundColor
-}
+const { 
+    mockToastify, 
+    unMockToastify, 
+    toastifyDefaultConfig,
+    TOASTIFY_SUCCESS_COLOR,
+    TOASTIFY_ERROR_COLOR,
+    TOASTIFY_WARNING_COLOR
+} = require('./mocks/toastify')
 
 describe('Testing on key pressed', () => {
     const database = ['agent', 'above', 'allow', 'lunch', 'money', 'sorry', 'today', 'worry']
@@ -39,33 +46,66 @@ describe('Testing on key pressed', () => {
         const dom = await JSDOM.fromFile(path.resolve(__dirname, '..', 'index.html'))
         global.document = dom.window.document
         global.window = dom.window
+        global.Toastify = mockToastify()
     })
 
     afterEach(() => {
         jest.restoreAllMocks()
+        unMockToastify()
     })
 
-    test('should return that reach the max letter per row', () => {
-        expect(app.onKeyPressed('A', { ...gameInitialConfig, currentRow: 7 })).toBe(NOTIFICATION_REACH_MAX_ATTEMPTS)
+    test('should show a notification when reach the max letter per row', () => {
+        const game = { ...gameInitialConfig, currentRow: 7 }
+        app.onKeyPressed('a', game)
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_REACH_MAX_ATTEMPTS, backgroundColor: TOASTIFY_ERROR_COLOR })
     })
 
     test('simulating when an invalid key is pressed', () => {
-        expect(app.onKeyPressed('4', gameInitialConfig)).toBe(NOTIFICATION_INVALID_PRESSED_KEY)
-        expect(app.onKeyPressed(0, gameInitialConfig)).toBe(NOTIFICATION_INVALID_PRESSED_KEY)
-        expect(app.onKeyPressed(9, gameInitialConfig)).toBe(NOTIFICATION_INVALID_PRESSED_KEY)
-        expect(app.onKeyPressed('&', gameInitialConfig)).toBe(NOTIFICATION_INVALID_PRESSED_KEY)
-        expect(app.onKeyPressed(']', gameInitialConfig)).toBe(NOTIFICATION_INVALID_PRESSED_KEY)
-        expect(app.onKeyPressed('Meta', gameInitialConfig)).toBe(NOTIFICATION_INVALID_PRESSED_KEY)
-        expect(app.onKeyPressed('é', gameInitialConfig)).toBe(NOTIFICATION_INVALID_PRESSED_KEY)
-        expect(app.onKeyPressed(';', gameInitialConfig)).toBe(NOTIFICATION_INVALID_PRESSED_KEY)
+        const game = { ...gameInitialConfig }
+
+        app.onKeyPressed('4', game)
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_INVALID_PRESSED_KEY, backgroundColor: TOASTIFY_ERROR_COLOR })
+
+        app.onKeyPressed(0, game)
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_INVALID_PRESSED_KEY, backgroundColor: TOASTIFY_ERROR_COLOR })
+
+        app.onKeyPressed(9, game)
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_INVALID_PRESSED_KEY, backgroundColor: TOASTIFY_ERROR_COLOR })
+
+        app.onKeyPressed('&', game)
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_INVALID_PRESSED_KEY, backgroundColor: TOASTIFY_ERROR_COLOR })
+
+        app.onKeyPressed(']', game)
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_INVALID_PRESSED_KEY, backgroundColor: TOASTIFY_ERROR_COLOR })
+        
+        app.onKeyPressed('Meta', game)
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_INVALID_PRESSED_KEY, backgroundColor: TOASTIFY_ERROR_COLOR })
+        
+        app.onKeyPressed('é', game)
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_INVALID_PRESSED_KEY, backgroundColor: TOASTIFY_ERROR_COLOR })
+        
+        app.onKeyPressed(';', game)
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_INVALID_PRESSED_KEY, backgroundColor: TOASTIFY_ERROR_COLOR })
     })
 
     describe('simulating when Backspace key was pressed', () => {
         test('should return that backspace key was pressed with empty guess', () => {
             const game = { ...gameInitialConfig }
-            expect(app.onKeyPressed(KEY_BACKSPACE, game)).toBe(NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS)
+            app.onKeyPressed(KEY_BACKSPACE, game)
+
             expect(game.currentGuess).toBe('')
             expect(game.currentLetterPosition).toBe(1)
+            expect(global.Toastify).toHaveBeenCalled()
+            expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS, backgroundColor: TOASTIFY_WARNING_COLOR })
         })
 
         describe('testing when the initial game configuration has only one character', () => {
@@ -78,9 +118,12 @@ describe('Testing on key pressed', () => {
             })
 
             test('should return that backspace was pressed when current guess is an empty string', () => {
-                expect(app.onKeyPressed(KEY_BACKSPACE, game)).toBe(NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS)
+                app.onKeyPressed(KEY_BACKSPACE, game)
                 expect(game.currentGuess).toBe('')
                 expect(game.currentLetterPosition).toBe(1)
+
+                expect(global.Toastify).toHaveBeenCalled()
+                expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS, backgroundColor: TOASTIFY_WARNING_COLOR })
             })
         })
 
@@ -99,9 +142,12 @@ describe('Testing on key pressed', () => {
     describe('simulating when Delete key was pressed', () => {
         test('should return that delete key was pressed with empty guess', () => {
             const game = { ...gameInitialConfig }
-            expect(app.onKeyPressed(KEY_DELETE, game)).toBe(NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS)
+            app.onKeyPressed(KEY_DELETE, game)
             expect(game.currentGuess).toBe('')
             expect(game.currentLetterPosition).toBe(1)
+
+            expect(global.Toastify).toHaveBeenCalled()
+            expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS, backgroundColor: TOASTIFY_WARNING_COLOR })
         })
 
         describe('testing when the initial game configuration has only one character', () => {
@@ -114,9 +160,12 @@ describe('Testing on key pressed', () => {
             })
 
             test('should return that delete was pressed when current guess is an empty string', () => {
-                expect(app.onKeyPressed(KEY_DELETE, game)).toBe(NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS)
+                app.onKeyPressed(KEY_DELETE, game)
                 expect(game.currentGuess).toBe('')
                 expect(game.currentLetterPosition).toBe(1)
+
+                expect(global.Toastify).toHaveBeenCalled()
+                expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS, backgroundColor: TOASTIFY_WARNING_COLOR })
             })
         })
 
@@ -133,19 +182,26 @@ describe('Testing on key pressed', () => {
     })
 
     describe('when Enter key was pressed', () => {
-        test('when empty guess', () => {
+        test('should show a notification when empty guess', () => {
             const game = { ...gameInitialConfig }
-            expect(app.onKeyPressed(KEY_ENTER, game)).toBe(NOTIFICATION_EMPTY_GUESS)
+            app.onKeyPressed(KEY_ENTER, game)
+
+            expect(global.Toastify).toHaveBeenCalled()
+            expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_EMPTY_GUESS, backgroundColor: TOASTIFY_ERROR_COLOR })
         })
 
-        test('when guess with one letter', () => {
+        test('should show a notification when guess with one letter', () => {
             const game = { ...gameInitialConfig, currentLetterPosition: 2, currentGuess: 'a'}
-            expect(app.onKeyPressed(KEY_ENTER, game)).toBe(NOTIFICATION_INCOMPLETE_GUESS)
+            app.onKeyPressed(KEY_ENTER, game)
+            expect(global.Toastify).toHaveBeenCalled()
+            expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_INCOMPLETE_GUESS, backgroundColor: TOASTIFY_WARNING_COLOR })
         })
 
-        test('when guess is not in database', () => {
+        test('should show a notification when guess is not in database', () => {
             const game = { ...gameInitialConfig, currentLetterPosition: 6, currentGuess: 'arcad'}
-            expect(app.onKeyPressed(KEY_ENTER, game)).toBe(NOTIFICATION_WORD_NOT_IN_DATABASE)
+            app.onKeyPressed(KEY_ENTER, game)
+            expect(global.Toastify).toHaveBeenCalled()
+            expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_WORD_NOT_IN_DATABASE, backgroundColor: TOASTIFY_WARNING_COLOR })
         })
 
         test('when a valid guess', () => {
@@ -157,10 +213,9 @@ describe('Testing on key pressed', () => {
         })
 
         test('when the guess match with right guess', () => {
-            global.alert = jest.fn(() => NOTIFICATION_GAME_OVER_GUESS_RIGHT)
-
             const game = { ...gameInitialConfig, currentLetterPosition: 6, currentGuess: 'allow', rightGuess: 'allow'}
-            expect(app.onKeyPressed(KEY_ENTER, game)).toBe(NOTIFICATION_GAME_OVER_GUESS_RIGHT)
+            app.onKeyPressed(KEY_ENTER, game)
+
             expect(game.currentGuess).toBe('allow')
             expect(game.currentLetterPosition).toBe(6)
             expect(game.currentRow).toBe(1)
@@ -170,27 +225,34 @@ describe('Testing on key pressed', () => {
             expect(getGameBoardLetter(3)).toBe(GREEN_COLOR_RGB)
             expect(getGameBoardLetter(4)).toBe(GREEN_COLOR_RGB)
             expect(getGameBoardLetter(5)).toBe(GREEN_COLOR_RGB)
+
+            expect(global.Toastify).toHaveBeenCalled()
+            expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_GAME_OVER_GUESS_RIGHT, backgroundColor: TOASTIFY_SUCCESS_COLOR })
         })
     })
 
     describe('Checking max letters per row', () => {
         test('Could not return max letter per row when we are trying to backspace/delete', () => {
             const game = { ...gameInitialConfig, currentLetterPosition: 6, currentGuess: 'allow'}
-            expect(app.onKeyPressed(KEY_BACKSPACE, game)).not.toBe(NOTIFICATION_REACH_MAX_LETTERS_PER_ROW)
-            expect(app.onKeyPressed(KEY_DELETE, game)).not.toBe(NOTIFICATION_REACH_MAX_LETTERS_PER_ROW)
+            expect(app.onKeyPressed(KEY_BACKSPACE, game)).toBe(NOTIFICATION_BACKSPACE_KEY_PRESSED)
+            expect(app.onKeyPressed(KEY_DELETE, game)).toBe(NOTIFICATION_BACKSPACE_KEY_PRESSED)
         })
 
         test('Could not return max letter per row when we are trying to enter', () => {
             const game = { ...gameInitialConfig, currentLetterPosition: 6, currentGuess: 'allow'}
-            expect(app.onKeyPressed(KEY_ENTER, game)).not.toBe(NOTIFICATION_REACH_MAX_LETTERS_PER_ROW)
+            expect(app.onKeyPressed(KEY_ENTER, game)).toBe(NOTIFICATION_ENTER_KEY_PRESSED)
         })
 
         test('should return that reach the max attempts', () => {
             const game = { ...gameInitialConfig, currentLetterPosition: 6, currentGuess: 'allow' }
-            expect(app.onKeyPressed('A', game)).toBe(NOTIFICATION_REACH_MAX_LETTERS_PER_ROW)
+            app.onKeyPressed('A', game)
+
             expect(game.currentGuess).toBe('allow')
             expect(game.currentLetterPosition).toBe(6)
             expect(game.currentRow).toBe(1)
+
+            expect(global.Toastify).toHaveBeenCalled()
+            expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_REACH_MAX_LETTERS_PER_ROW, backgroundColor: TOASTIFY_ERROR_COLOR })
         })
     })
 

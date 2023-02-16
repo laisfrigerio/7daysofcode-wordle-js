@@ -116,3 +116,19 @@ main {
     font-size: 17px;
     width: 83px;
 }
+
+.play-again {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.btn-play-again {
+    background-color: var(--yellow);
+    border-radius: 10px;
+    color: var(--bg);
+    cursor: pointer;
+    display: none;
+    font-weight: bold;
+    padding: 10px 20px;
+}

@@ -5,6 +5,10 @@ const KEY_BACKSPACE = 'Backspace'
 const KEY_ENTER = 'Enter'
 const KEY_DELETE = 'Delete'
 
+const GRAY_COLOR_HEXADECIMAL = '#585858'
+const YELLOW_COLOR_HEXADECIMAL = '#B59F3B'
+const GREEN_COLOR_HEXADECIMAL = '#538D4E'
+
 const NOTIFICATION_DISPLAY_LETTER_SUCCESSFULLY = 'Showing letter with success'
 const NOTIFICATION_BACKSPACE_KEY_PRESSED = 'Backspace key pressed'
 const NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS = 'Could not erase when is an empty guess'
@@ -15,6 +19,7 @@ const NOTIFICATION_INVALID_PRESSED_KEY = 'Invalid Pressed Key'
 const NOTIFICATION_REACH_MAX_ATTEMPTS = 'Reach Max Attempts'
 const NOTIFICATION_REACH_MAX_LETTERS_PER_ROW = 'Reach Max letter per row'
 const NOTIFICATION_WORD_NOT_IN_DATABASE = 'Word not in database'
+const NOTIFICATION_GAME_OVER_GUESS_RIGHT = 'You guessed right! Game over!'
 
 const gameInitialConfig = {
     database: [],
@@ -60,12 +65,52 @@ const isCurrentGuessEmpty = (currentGuess) => {
     return currentGuess === ''
 }
 
+const isCorrectGuess = (currentGuess, rightGuess) => {
+    return rightGuess === currentGuess
+}
+
+const isLetterInRightGuess = (letter, rightGuess) => {
+    const letterPosition = rightGuess.indexOf(letter)
+    return letterPosition > -1
+}
+
+const isLettersEqualsInSamePosition = (position, currentGuess, rightGuess) => {
+    return currentGuess[position] === rightGuess[position]
+}
+
 const reachMaxLetterPerRow = (currentLetterPosition) => {
     return currentLetterPosition > MAX_LETTE_PER_ROW
 }
 
 const reachMaxAttempts = (currentRow) => {
     return currentRow > MAX_ATTEMPTS
+}
+
+const applyColor = (element, color) => {
+    element.style.backgroundColor = color
+}
+
+const displayColor = (game) => {
+    const { currentGuess, currentRow, rightGuess } = game
+
+    const row = document.querySelector(`.row-${currentRow}`)
+
+    for (let position = 0; position < currentGuess.length; position++) {
+        const box = row.querySelector(`.letter-${position+1}`)
+        const letter = currentGuess[position]
+
+        if (!isLetterInRightGuess(letter, rightGuess)) {
+            applyColor(box, GRAY_COLOR_HEXADECIMAL)
+            continue
+        }
+
+        if (isLettersEqualsInSamePosition(position, currentGuess, rightGuess)) {
+            applyColor(box, GREEN_COLOR_HEXADECIMAL)
+            continue
+        }
+
+        applyColor(box, YELLOW_COLOR_HEXADECIMAL)
+    }
 }
 
 const removeLastLetter = (currentGuess) => {
@@ -105,7 +150,7 @@ const nextGuess = (game) => {
 }
 
 const checkGuess = (game) => {
-    const { database, currentLetterPosition, currentGuess } = game
+    const { database, currentLetterPosition, currentGuess, rightGuess } = game
 
     if (isCurrentGuessEmpty(currentGuess)) {
         return NOTIFICATION_EMPTY_GUESS
@@ -118,6 +163,14 @@ const checkGuess = (game) => {
     if (!isGuessInDatabase(currentGuess, database)) {
         return NOTIFICATION_WORD_NOT_IN_DATABASE
     }
+
+    if (isCorrectGuess(currentGuess, rightGuess)) {
+        displayColor(game)
+        setTimeout(() => alert(NOTIFICATION_GAME_OVER_GUESS_RIGHT), 250)
+        return NOTIFICATION_GAME_OVER_GUESS_RIGHT
+    }
+
+    displayColor(game)
 
     return nextGuess(game)
 }
@@ -169,14 +222,18 @@ const start = () => {
         module.exports = {
             checkGuess,
             nextGuess,
+            displayColor,
             displayLetterOnTheBoard,
             removeLetterFromBoard,
             removeLastLetter,
             getOneRandomWord,
             isBackspaceKeyPressed,
+            isCorrectGuess,
             isCurrentGuessEmpty,
             isGuessInDatabase,
             isEnterKeyPressed,
+            isLettersEqualsInSamePosition,
+            isLetterInRightGuess,
             isValidKeyPressed,
             isTestEnviroment,
             loadWords,
@@ -190,10 +247,11 @@ const start = () => {
 
     window.onload = async () => {
         const database = await loadWords()
+        const rightGuess = getOneRandomWord(database)
 
-        const game = { ...gameInitialConfig, database }
+        const game = { ...gameInitialConfig, database, rightGuess }
         console.log(database)
-        console.log('get one random word: ', getOneRandomWord(database))
+        console.log('get one random word: ', rightGuess)
 
         document.addEventListener('keydown', (event) => onKeyPressed(event.key, game))
     }

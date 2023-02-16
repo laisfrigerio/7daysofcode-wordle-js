@@ -64,6 +64,11 @@ const isCorrectGuess = (currentGuess, rightGuess) => {
     return rightGuess === currentGuess
 }
 
+const isLetterInRightGuess = (letter, rightGuess) => {
+    const letterPosition = rightGuess.indexOf(letter)
+    return letterPosition > -1
+}
+
 const reachMaxLetterPerRow = (currentLetterPosition) => {
     return currentLetterPosition > MAX_LETTE_PER_ROW
 }
@@ -182,6 +187,7 @@ const start = () => {
             isCurrentGuessEmpty,
             isGuessInDatabase,
             isEnterKeyPressed,
+            isLetterInRightGuess,
             isValidKeyPressed,
             isTestEnviroment,
             loadWords,

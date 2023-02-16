@@ -86,7 +86,7 @@ const isCurrentGuessEmpty = (currentGuess) => {
 }
 
 const isCorrectGuess = (currentGuess, rightGuess) => {
-    return rightGuess === currentGuess
+    return rightGuess.toLowerCase() === currentGuess.toLowerCase()
 }
 
 const isLetterInRightGuess = (letter, rightGuess) => {

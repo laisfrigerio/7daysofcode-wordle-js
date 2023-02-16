@@ -4,7 +4,8 @@
   "description": "Desafio 7 Days Of Code - Wordle",
   "main": "scripts.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",

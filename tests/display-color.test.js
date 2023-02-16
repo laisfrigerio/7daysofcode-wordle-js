@@ -41,6 +41,11 @@ describe('Testing display color...', () => {
         expect(getGameBoardLetter(3)).toBe(GREEN_COLOR_RGB)
         expect(getGameBoardLetter(4)).toBe(GREEN_COLOR_RGB)
         expect(getGameBoardLetter(5)).toBe(GREEN_COLOR_RGB)
+
+        expect(getGameBoardLetter('a')).toBe(GREEN_COLOR_RGB)
+        expect(getGameBoardLetter('l')).toBe(GREEN_COLOR_RGB)
+        expect(getGameBoardLetter('o')).toBe(GREEN_COLOR_RGB)
+        expect(getGameBoardLetter('w')).toBe(GREEN_COLOR_RGB)
     })
 
     test('when comparing sorry with worry', () => {
@@ -53,6 +58,11 @@ describe('Testing display color...', () => {
         expect(getGameBoardLetter(3)).toBe(GREEN_COLOR_RGB)
         expect(getGameBoardLetter(4)).toBe(GREEN_COLOR_RGB)
         expect(getGameBoardLetter(5)).toBe(GREEN_COLOR_RGB)
+
+        expect(getGameBoardLetter('s')).toBe(GRAY_COLOR_RGB)
+        expect(getGameBoardLetter('o')).toBe(GREEN_COLOR_RGB)
+        expect(getGameBoardLetter('r')).toBe(GREEN_COLOR_RGB)
+        expect(getGameBoardLetter('y')).toBe(GREEN_COLOR_RGB)
     })
 
     test('when comparing basic with beans', () => {
@@ -65,5 +75,11 @@ describe('Testing display color...', () => {
         expect(getGameBoardLetter(3)).toBe(YELLOW_COLOR_RGB)
         expect(getGameBoardLetter(4)).toBe(GRAY_COLOR_RGB)
         expect(getGameBoardLetter(5)).toBe(GRAY_COLOR_RGB)
+
+        expect(getGameBoardLetter('b')).toBe(GREEN_COLOR_RGB)
+        expect(getGameBoardLetter('a')).toBe(YELLOW_COLOR_RGB)
+        expect(getGameBoardLetter('s')).toBe(YELLOW_COLOR_RGB)
+        expect(getGameBoardLetter('i')).toBe(GRAY_COLOR_RGB)
+        expect(getGameBoardLetter('c')).toBe(GRAY_COLOR_RGB)
     })
 })

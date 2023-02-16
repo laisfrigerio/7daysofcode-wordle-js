@@ -52,7 +52,7 @@ const showNotification = ({ backgroundColor, message }) => {
 const getOneRandomWord = (wordsList) => {
     const countWords = wordsList.length
     const shuffleIndex = Math.floor(Math.random() * countWords)
-    return wordsList[shuffleIndex]
+    return wordsList[shuffleIndex].toLowerCase()
 }
 
 const getGameBoardLetter = (currentRow, currentLetterPosition) => {
@@ -86,7 +86,7 @@ const isCurrentGuessEmpty = (currentGuess) => {
 }
 
 const isCorrectGuess = (currentGuess, rightGuess) => {
-    return rightGuess === currentGuess
+    return rightGuess.toLowerCase() === currentGuess.toLowerCase()
 }
 
 const isLetterInRightGuess = (letter, rightGuess) => {
@@ -119,17 +119,22 @@ const displayColor = (game) => {
         const box = row.querySelector(`.letter-${position+1}`)
         const letter = currentGuess[position]
 
+        const letterBox = document.querySelector(`.letter-${letter}`)
+
         if (!isLetterInRightGuess(letter, rightGuess)) {
             applyColor(box, GRAY_COLOR_HEXADECIMAL)
+            applyColor(letterBox, GRAY_COLOR_HEXADECIMAL)
             continue
         }
 
         if (isLettersEqualsInSamePosition(position, currentGuess, rightGuess)) {
             applyColor(box, GREEN_COLOR_HEXADECIMAL)
+            applyColor(letterBox, GREEN_COLOR_HEXADECIMAL)
             continue
         }
 
         applyColor(box, YELLOW_COLOR_HEXADECIMAL)
+        applyColor(letterBox, YELLOW_COLOR_HEXADECIMAL)
     }
 }
 
@@ -224,6 +229,32 @@ const onKeyPressed = (pressedKey, game) => {
     return displayLetterOnTheBoard(game, pressedKey)
 }
 
+const onEnterButtonPressed = (game) => {
+    document.querySelector('.action.enter')
+            .addEventListener('click', () => onKeyPressed('Enter', game))
+}
+
+const onEraseButtonPressed = (game) => {
+    document.querySelector('.action.erase')
+            .addEventListener('click', (event) => {
+                event.stopPropagation()
+                onKeyPressed('Backspace', game)
+            })
+}
+
+const onLetterButtonPressed = (game) => {
+    document.querySelectorAll('.letter').forEach((element) => {
+        element.addEventListener('click', (event) => {
+            onKeyPressed(event.target.value, game)
+            element.blur()
+        })
+    })
+}
+
+const onKeydown = (game) => {
+    document.addEventListener('keydown', (event) => onKeyPressed(event.key, game))
+}
+
 const loadWords = async () => {
     return fetch('./resources/assets/json/database.json')
                     .then((response) => response.json())
@@ -272,7 +303,10 @@ const start = () => {
         console.log(database)
         console.log('get one random word: ', rightGuess)
 
-        document.addEventListener('keydown', (event) => onKeyPressed(event.key, game))
+        onKeydown(game)
+        onLetterButtonPressed(game)
+        onEnterButtonPressed(game)
+        onEraseButtonPressed(game)
     }
 }
 

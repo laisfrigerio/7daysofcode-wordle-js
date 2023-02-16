@@ -2,13 +2,13 @@ const { JSDOM } = require('jsdom')
 const path = require('path')
 const app = require('../resources/scripts/app')
 
-const GREEN_COLOR_RGB = 'rgb(83, 141, 78)'
-const GRAY_COLOR_RGB = 'rgb(88, 88, 88)'
-const YELLOW_COLOR_RGB = 'rgb(181, 159, 59)'
+const {
+    GREEN_COLOR_RGB,
+    YELLOW_COLOR_RGB,
+    GRAY_COLOR_RGB
+} = require('./aux/consts')
 
-const getGameBoardLetter = (index) => {
-    return global.document.querySelector(`.letter-${index}`).style.backgroundColor
-}
+const { getGameBoardLetter } = require('./aux/helpers')
 
 describe('Testing display color...', () => {
     const database = ['agent', 'above', 'allow', 'lunch', 'money', 'sorry', 'today', 'worry']

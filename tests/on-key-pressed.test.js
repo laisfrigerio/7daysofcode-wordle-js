@@ -2,27 +2,25 @@ const { JSDOM } = require('jsdom')
 const path = require('path')
 const app = require('../resources/scripts/app')
 
-const NOTIFICATION_DISPLAY_LETTER_SUCCESSFULLY = 'Showing letter with success'
-const NOTIFICATION_BACKSPACE_KEY_PRESSED = 'Backspace key pressed'
-const NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS = 'Could not erase when is an empty guess'
-const NOTIFICATION_EMPTY_GUESS = 'Empty guess'
-const NOTIFICATION_ENTER_KEY_PRESSED = 'Enter key pressed'
-const NOTIFICATION_INCOMPLETE_GUESS = 'Incomplete guess'
-const NOTIFICATION_INVALID_PRESSED_KEY = 'Invalid Pressed Key'
-const NOTIFICATION_REACH_MAX_ATTEMPTS = 'Reach Max Attempts'
-const NOTIFICATION_REACH_MAX_LETTERS_PER_ROW = 'Reach Max letter per row'
-const NOTIFICATION_WORD_NOT_IN_DATABASE = 'Word not in database'
-const NOTIFICATION_GAME_OVER_GUESS_RIGHT = 'You guessed right! Game over!'
+const {
+    NOTIFICATION_DISPLAY_LETTER_SUCCESSFULLY,
+    NOTIFICATION_BACKSPACE_KEY_PRESSED,
+    NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS,
+    NOTIFICATION_EMPTY_GUESS,
+    NOTIFICATION_ENTER_KEY_PRESSED,
+    NOTIFICATION_INCOMPLETE_GUESS,
+    NOTIFICATION_INVALID_PRESSED_KEY,
+    NOTIFICATION_REACH_MAX_ATTEMPTS,
+    NOTIFICATION_REACH_MAX_LETTERS_PER_ROW,
+    NOTIFICATION_WORD_NOT_IN_DATABASE,
+    NOTIFICATION_GAME_OVER_GUESS_RIGHT,
+    GREEN_COLOR_RGB,
+    KEY_BACKSPACE,
+    KEY_ENTER,
+    KEY_DELETE,
+} = require('./aux/consts')
 
-const KEY_BACKSPACE = 'Backspace'
-const KEY_ENTER = 'Enter'
-const KEY_DELETE = 'Delete'
-
-const GREEN_COLOR_RGB = 'rgb(83, 141, 78)'
-
-const getGameBoardLetter = (index) => {
-    return global.document.querySelector(`.letter-${index}`).style.backgroundColor
-}
+const { getGameBoardLetter } = require('./aux/helpers')
 
 describe('Testing on key pressed', () => {
     const database = ['agent', 'above', 'allow', 'lunch', 'money', 'sorry', 'today', 'worry']

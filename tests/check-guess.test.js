@@ -2,17 +2,16 @@ const { JSDOM } = require('jsdom')
 const path = require('path')
 const app = require('../resources/scripts/app')
 
-const NOTIFICATION_EMPTY_GUESS = 'Empty guess'
-const NOTIFICATION_ENTER_KEY_PRESSED = 'Enter key pressed'
-const NOTIFICATION_INCOMPLETE_GUESS = 'Incomplete guess'
-const NOTIFICATION_WORD_NOT_IN_DATABASE = 'Word not in database'
-const NOTIFICATION_GAME_OVER_GUESS_RIGHT = 'You guessed right! Game over!'
+const {
+    NOTIFICATION_EMPTY_GUESS,
+    NOTIFICATION_ENTER_KEY_PRESSED,
+    NOTIFICATION_GAME_OVER_GUESS_RIGHT,
+    NOTIFICATION_INCOMPLETE_GUESS,
+    NOTIFICATION_WORD_NOT_IN_DATABASE,
+    GREEN_COLOR_RGB
+} = require('./aux/consts')
 
-const GREEN_COLOR_RGB = 'rgb(83, 141, 78)'
-
-const getGameBoardLetter = (index) => {
-    return global.document.querySelector(`.letter-${index}`).style.backgroundColor
-}
+const { getGameBoardLetter } = require('./aux/helpers')
 
 describe('Checking guess', () => {
     const database = ['agent', 'above', 'lunch', 'money', 'sorry', 'today', 'worry']

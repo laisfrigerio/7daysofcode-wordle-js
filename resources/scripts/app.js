@@ -45,14 +45,44 @@ const toastifyDefaultConfig = {
     }
 }
 
-const showNotification = ({ backgroundColor, message }) => {
-    Toastify({ ...toastifyDefaultConfig, text: message, backgroundColor }).showToast();
-}
-
 const getOneRandomWord = (wordsList) => {
     const countWords = wordsList.length
     const shuffleIndex = Math.floor(Math.random() * countWords)
     return wordsList[shuffleIndex].toLowerCase()
+}
+
+const showNotification = ({ backgroundColor, message }) => {
+    Toastify({ ...toastifyDefaultConfig, text: message, backgroundColor }).showToast()
+}
+
+const showPlayAgainButton = () => {
+    const buttonPlayAgain = document.querySelector('.play-again .btn-play-again')
+    buttonPlayAgain.style.display = 'block'
+}
+
+const hidePlayAgainButton = () => {
+    const buttonPlayAgain = document.querySelector('.btn-play-again')
+    buttonPlayAgain.style.display = 'none'
+}
+
+const resetInitialGame = (game) => {
+    game.rightGuess = getOneRandomWord(game.database)
+    game.currentRow = 1
+    game.currentLetterPosition = 1
+    game.currentGuess = ''
+}
+
+const resetBoardGameLetter = () => {
+    document.querySelectorAll('.board-game .row .letter').forEach((element) => {
+        element.textContent = ''
+        element.style.backgroundColor = ''
+    })
+}
+
+const resetKeyboardLetter = () => {
+    document.querySelectorAll('.keyboard .row .letter').forEach((element) => {
+        element.style.backgroundColor = ''
+    })
 }
 
 const getGameBoardLetter = (currentRow, currentLetterPosition) => {
@@ -171,6 +201,10 @@ const nextGuess = (game) => {
     game.currentGuess = ''
     game.currentLetterPosition = 1
 
+    if (reachMaxAttempts(game.currentRow)) {
+        showPlayAgainButton()
+    }
+
     return NOTIFICATION_ENTER_KEY_PRESSED
 }
 
@@ -191,6 +225,7 @@ const checkGuess = (game) => {
 
     if (isCorrectGuess(currentGuess, rightGuess)) {
         displayColor(game)
+        showPlayAgainButton()
         return showNotification({ message: NOTIFICATION_GAME_OVER_GUESS_RIGHT, backgroundColor: TOASTIFY_SUCCESS_COLOR })
     }
 
@@ -251,6 +286,17 @@ const onLetterButtonPressed = (game) => {
     })
 }
 
+const onPlayAgainButtonPressed = (game) => {
+    const buttonPlayAgain = document.querySelector('.btn-play-again')
+
+    buttonPlayAgain.addEventListener('click', () => {
+        resetInitialGame(game)
+        resetBoardGameLetter()
+        resetKeyboardLetter()
+        hidePlayAgainButton()
+    })
+}
+
 const onKeydown = (game) => {
     document.addEventListener('keydown', (event) => onKeyPressed(event.key, game))
 }
@@ -289,7 +335,12 @@ const start = () => {
             loadWords,
             onKeyPressed,
             reachMaxAttempts,
-            reachMaxLetterPerRow
+            reachMaxLetterPerRow,
+            showPlayAgainButton,
+            hidePlayAgainButton,
+            resetInitialGame,
+            resetBoardGameLetter,
+            resetKeyboardLetter
         }
 
         return
@@ -307,6 +358,7 @@ const start = () => {
         onLetterButtonPressed(game)
         onEnterButtonPressed(game)
         onEraseButtonPressed(game)
+        onPlayAgainButtonPressed(game)
     }
 }
 

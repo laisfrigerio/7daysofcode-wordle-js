@@ -22,6 +22,13 @@ const {
 
 const { getGameBoardLetter } = require('./aux/helpers')
 
+const { 
+    mockToastify, 
+    unMockToastify, 
+    toastifyDefaultConfig,
+    TOASTIFY_SUCCESS_COLOR
+} = require('./mocks/toastify')
+
 describe('Testing on key pressed', () => {
     const database = ['agent', 'above', 'allow', 'lunch', 'money', 'sorry', 'today', 'worry']
 
@@ -37,10 +44,12 @@ describe('Testing on key pressed', () => {
         const dom = await JSDOM.fromFile(path.resolve(__dirname, '..', 'index.html'))
         global.document = dom.window.document
         global.window = dom.window
+        global.Toastify = mockToastify()
     })
 
     afterEach(() => {
         jest.restoreAllMocks()
+        unMockToastify()
     })
 
     test('should return that reach the max letter per row', () => {
@@ -155,10 +164,9 @@ describe('Testing on key pressed', () => {
         })
 
         test('when the guess match with right guess', () => {
-            global.alert = jest.fn(() => NOTIFICATION_GAME_OVER_GUESS_RIGHT)
-
             const game = { ...gameInitialConfig, currentLetterPosition: 6, currentGuess: 'allow', rightGuess: 'allow'}
-            expect(app.onKeyPressed(KEY_ENTER, game)).toBe(NOTIFICATION_GAME_OVER_GUESS_RIGHT)
+            app.onKeyPressed(KEY_ENTER, game)
+
             expect(game.currentGuess).toBe('allow')
             expect(game.currentLetterPosition).toBe(6)
             expect(game.currentRow).toBe(1)
@@ -168,6 +176,9 @@ describe('Testing on key pressed', () => {
             expect(getGameBoardLetter(3)).toBe(GREEN_COLOR_RGB)
             expect(getGameBoardLetter(4)).toBe(GREEN_COLOR_RGB)
             expect(getGameBoardLetter(5)).toBe(GREEN_COLOR_RGB)
+
+            expect(global.Toastify).toHaveBeenCalled()
+            expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_GAME_OVER_GUESS_RIGHT, backgroundColor: TOASTIFY_SUCCESS_COLOR })
         })
     })
 

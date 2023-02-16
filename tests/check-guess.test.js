@@ -13,6 +13,13 @@ const {
 
 const { getGameBoardLetter } = require('./aux/helpers')
 
+const { 
+    mockToastify, 
+    unMockToastify, 
+    toastifyDefaultConfig,
+    TOASTIFY_SUCCESS_COLOR
+} = require('./mocks/toastify')
+
 describe('Checking guess', () => {
     const database = ['agent', 'above', 'lunch', 'money', 'sorry', 'today', 'worry']
 
@@ -20,10 +27,12 @@ describe('Checking guess', () => {
         const dom = await JSDOM.fromFile(path.resolve(__dirname, '..', 'index.html'))
         global.document = dom.window.document
         global.window = dom.window
+        global.Toastify = mockToastify()
     })
 
     afterEach(() => {
         jest.restoreAllMocks()
+        unMockToastify()
     })
 
     test('should return a "Empty guess" message because currentGuess attribute is empty', () => {
@@ -78,8 +87,6 @@ describe('Checking guess', () => {
     })
 
     test('when the guess match with right word', () => {
-        global.alert = jest.fn(() => NOTIFICATION_GAME_OVER_GUESS_RIGHT)
-
         const game = {
             database,
             currentRow: 1,
@@ -88,7 +95,7 @@ describe('Checking guess', () => {
             rightGuess: 'sorry'
         }
 
-        expect(app.checkGuess(game)).toBe(NOTIFICATION_GAME_OVER_GUESS_RIGHT)
+        app.checkGuess(game)
 
         expect(game.currentGuess).toBe("sorry")
         expect(game.currentLetterPosition).toBe(6)
@@ -99,5 +106,8 @@ describe('Checking guess', () => {
         expect(getGameBoardLetter(3)).toBe(GREEN_COLOR_RGB)
         expect(getGameBoardLetter(4)).toBe(GREEN_COLOR_RGB)
         expect(getGameBoardLetter(5)).toBe(GREEN_COLOR_RGB)
+
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_GAME_OVER_GUESS_RIGHT, backgroundColor: TOASTIFY_SUCCESS_COLOR })
     })
 })

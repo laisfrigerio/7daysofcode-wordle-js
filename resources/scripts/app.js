@@ -9,6 +9,10 @@ const GRAY_COLOR_HEXADECIMAL = '#585858'
 const YELLOW_COLOR_HEXADECIMAL = '#B59F3B'
 const GREEN_COLOR_HEXADECIMAL = '#538D4E'
 
+const TOASTIFY_SUCCESS_COLOR = '#538D4E'
+const TOASTIFY_ERROR_COLOR = '#BA4747'
+const TOASTIFY_WARNING_COLOR = '#B59F3B'
+
 const NOTIFICATION_DISPLAY_LETTER_SUCCESSFULLY = 'Showing letter with success'
 const NOTIFICATION_BACKSPACE_KEY_PRESSED = 'Backspace key pressed'
 const NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS = 'Could not erase when is an empty guess'
@@ -27,6 +31,22 @@ const gameInitialConfig = {
     currentLetterPosition: 1,
     currentGuess: '',
     rightGuess: ''
+}
+
+const toastifyDefaultConfig = {
+    duration: 3000,
+    newWindow: true,
+    close: true,
+    gravity: "top",
+    position: "center",
+    stopOnFocus: true,
+    style: {
+      boxShadow: "1px 3px 10px 0px #585858"
+    }
+}
+
+const showNotification = ({ backgroundColor, message }) => {
+    Toastify({ ...toastifyDefaultConfig, text: message, backgroundColor }).showToast();
 }
 
 const getOneRandomWord = (wordsList) => {
@@ -154,6 +174,7 @@ const checkGuess = (game) => {
 
     if (isCurrentGuessEmpty(currentGuess)) {
         return NOTIFICATION_EMPTY_GUESS
+        // return showNotification({ message: NOTIFICATION_EMPTY_GUESS, color: TOASTIFY_ERROR_COLOR })
     }
 
     if (!reachMaxLetterPerRow(currentLetterPosition)) {
@@ -166,8 +187,7 @@ const checkGuess = (game) => {
 
     if (isCorrectGuess(currentGuess, rightGuess)) {
         displayColor(game)
-        setTimeout(() => alert(NOTIFICATION_GAME_OVER_GUESS_RIGHT), 250)
-        return NOTIFICATION_GAME_OVER_GUESS_RIGHT
+        return showNotification({ message: NOTIFICATION_GAME_OVER_GUESS_RIGHT, backgroundColor: TOASTIFY_SUCCESS_COLOR })
     }
 
     displayColor(game)

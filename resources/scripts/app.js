@@ -7,9 +7,13 @@ const KEY_DELETE = 'Delete'
 
 const NOTIFICATION_DISPLAY_LETTER_SUCCESSFULLY = 'Showing letter with success'
 const NOTIFICATION_BACKSPACE_KEY_PRESSED = 'Backspace key pressed'
+const NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS = 'Could not erase when is an empty guess'
 const NOTIFICATION_ENTER_KEY_PRESSED = 'Enter key pressed'
 const NOTIFICATION_EMPTY_GUESS = 'Empty guess'
 const NOTIFICATION_INCOMPLETE_GUESS = 'Incomplete guess'
+const NOTIFICATION_INVALID_PRESSED_KEY = 'Invalid Pressed Key'
+const NOTIFICATION_REACH_MAX_ATTEMPTS = 'Reach Max Attempts'
+const NOTIFICATION_REACH_MAX_LETTERS_PER_ROW = 'Reach Max letter per row'
 const NOTIFICATION_WORD_NOT_IN_DATABASE = 'Word not in database'
 
 const gameInitialConfig = {
@@ -118,6 +122,36 @@ const checkGuess = (game) => {
     return nextGuess(game)
 }
 
+const onKeyPressed = (pressedKey, game) => {
+    const { currentLetterPosition, currentGuess, currentRow } = game
+
+    if (reachMaxAttempts(currentRow)) {
+        return NOTIFICATION_REACH_MAX_ATTEMPTS
+    }
+
+    if (!isValidKeyPressed(pressedKey)) {
+        return NOTIFICATION_INVALID_PRESSED_KEY
+    }
+
+    if (isBackspaceKeyPressed(pressedKey) && !isCurrentGuessEmpty(currentGuess)) {
+        return removeLetterFromBoard(game)
+    }
+
+    if (isBackspaceKeyPressed(pressedKey) && isCurrentGuessEmpty(currentGuess)) {
+        return NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS
+    }
+
+    if (isEnterKeyPressed(pressedKey)) {
+        return checkGuess(game)
+    }
+
+    if (reachMaxLetterPerRow(currentLetterPosition)) {
+        return NOTIFICATION_REACH_MAX_LETTERS_PER_ROW
+    }
+
+    return displayLetterOnTheBoard(game, pressedKey)
+}
+
 const loadWords = async () => {
     return fetch('./resources/assets/json/database.json')
                     .then((response) => response.json())
@@ -146,6 +180,7 @@ const start = () => {
             isValidKeyPressed,
             isTestEnviroment,
             loadWords,
+            onKeyPressed,
             reachMaxAttempts,
             reachMaxLetterPerRow
         }
@@ -155,8 +190,12 @@ const start = () => {
 
     window.onload = async () => {
         const database = await loadWords()
+
+        const game = { ...gameInitialConfig, database }
         console.log(database)
         console.log('get one random word: ', getOneRandomWord(database))
+
+        document.addEventListener('keydown', (event) => onKeyPressed(event.key, game))
     }
 }
 

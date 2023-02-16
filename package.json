@@ -4,8 +4,7 @@
   "description": "Desafio 7 Days Of Code - Wordle",
   "main": "scripts.js",
   "scripts": {
-    "test": "jest",
-    "jsdom": "^21.1.0"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -19,6 +18,7 @@
   },
   "homepage": "https://github.com/laisfrigerio/7daysofcode-wordle-js#readme",
   "devDependencies": {
-    "jest": "^29.4.1"
+    "jest": "^29.4.1",
+    "jsdom": "^21.1.0"
   }
 }

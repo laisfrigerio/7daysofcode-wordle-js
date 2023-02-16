@@ -5,6 +5,10 @@ const KEY_BACKSPACE = 'Backspace'
 const KEY_ENTER = 'Enter'
 const KEY_DELETE = 'Delete'
 
+const GRAY_COLOR_HEXADECIMAL = '#585858'
+const YELLOW_COLOR_HEXADECIMAL = '#B59F3B'
+const GREEN_COLOR_HEXADECIMAL = '#538D4E'
+
 const NOTIFICATION_DISPLAY_LETTER_SUCCESSFULLY = 'Showing letter with success'
 const NOTIFICATION_BACKSPACE_KEY_PRESSED = 'Backspace key pressed'
 const NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS = 'Could not erase when is an empty guess'
@@ -69,12 +73,43 @@ const isLetterInRightGuess = (letter, rightGuess) => {
     return letterPosition > -1
 }
 
+const isLettersEqualsInSamePosition = (position, currentGuess, rightGuess) => {
+    return currentGuess[position] === rightGuess[position]
+}
+
 const reachMaxLetterPerRow = (currentLetterPosition) => {
     return currentLetterPosition > MAX_LETTE_PER_ROW
 }
 
 const reachMaxAttempts = (currentRow) => {
     return currentRow > MAX_ATTEMPTS
+}
+
+const applyColor = (element, color) => {
+    element.style.backgroundColor = color
+}
+
+const displayColor = (game) => {
+    const { currentGuess, currentRow, rightGuess } = game
+
+    const row = document.querySelector(`.row-${currentRow}`)
+
+    for (let position = 0; position < currentGuess.length; position++) {
+        const box = row.querySelector(`.letter-${position+1}`)
+        const letter = currentGuess[position]
+
+        if (!isLetterInRightGuess(letter, rightGuess)) {
+            applyColor(box, GRAY_COLOR_HEXADECIMAL)
+            continue
+        }
+
+        if (isLettersEqualsInSamePosition(position, currentGuess, rightGuess)) {
+            applyColor(box, GREEN_COLOR_HEXADECIMAL)
+            continue
+        }
+
+        applyColor(box, YELLOW_COLOR_HEXADECIMAL)
+    }
 }
 
 const removeLastLetter = (currentGuess) => {
@@ -178,6 +213,7 @@ const start = () => {
         module.exports = {
             checkGuess,
             nextGuess,
+            displayColor,
             displayLetterOnTheBoard,
             removeLetterFromBoard,
             removeLastLetter,
@@ -187,6 +223,7 @@ const start = () => {
             isCurrentGuessEmpty,
             isGuessInDatabase,
             isEnterKeyPressed,
+            isLettersEqualsInSamePosition,
             isLetterInRightGuess,
             isValidKeyPressed,
             isTestEnviroment,

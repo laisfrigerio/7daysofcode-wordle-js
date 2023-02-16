@@ -173,16 +173,15 @@ const checkGuess = (game) => {
     const { database, currentLetterPosition, currentGuess, rightGuess } = game
 
     if (isCurrentGuessEmpty(currentGuess)) {
-        return NOTIFICATION_EMPTY_GUESS
-        // return showNotification({ message: NOTIFICATION_EMPTY_GUESS, color: TOASTIFY_ERROR_COLOR })
+        return showNotification({ message: NOTIFICATION_EMPTY_GUESS, backgroundColor: TOASTIFY_ERROR_COLOR })
     }
 
     if (!reachMaxLetterPerRow(currentLetterPosition)) {
-        return NOTIFICATION_INCOMPLETE_GUESS
+        return showNotification({ message: NOTIFICATION_INCOMPLETE_GUESS, backgroundColor: TOASTIFY_WARNING_COLOR })
     }
 
     if (!isGuessInDatabase(currentGuess, database)) {
-        return NOTIFICATION_WORD_NOT_IN_DATABASE
+        return showNotification({ message: NOTIFICATION_WORD_NOT_IN_DATABASE, backgroundColor: TOASTIFY_WARNING_COLOR })
     }
 
     if (isCorrectGuess(currentGuess, rightGuess)) {
@@ -199,11 +198,11 @@ const onKeyPressed = (pressedKey, game) => {
     const { currentLetterPosition, currentGuess, currentRow } = game
 
     if (reachMaxAttempts(currentRow)) {
-        return NOTIFICATION_REACH_MAX_ATTEMPTS
+        return showNotification({ message: NOTIFICATION_REACH_MAX_ATTEMPTS, backgroundColor: TOASTIFY_ERROR_COLOR })
     }
 
     if (!isValidKeyPressed(pressedKey)) {
-        return NOTIFICATION_INVALID_PRESSED_KEY
+        return showNotification({ message: NOTIFICATION_INVALID_PRESSED_KEY, backgroundColor: TOASTIFY_ERROR_COLOR })
     }
 
     if (isBackspaceKeyPressed(pressedKey) && !isCurrentGuessEmpty(currentGuess)) {
@@ -211,7 +210,7 @@ const onKeyPressed = (pressedKey, game) => {
     }
 
     if (isBackspaceKeyPressed(pressedKey) && isCurrentGuessEmpty(currentGuess)) {
-        return NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS
+        return showNotification({ message: NOTIFICATION_BACKSPACE_WHEN_EMPTY_GUESS, backgroundColor: TOASTIFY_WARNING_COLOR })
     }
 
     if (isEnterKeyPressed(pressedKey)) {
@@ -219,7 +218,7 @@ const onKeyPressed = (pressedKey, game) => {
     }
 
     if (reachMaxLetterPerRow(currentLetterPosition)) {
-        return NOTIFICATION_REACH_MAX_LETTERS_PER_ROW
+        return showNotification({ message: NOTIFICATION_REACH_MAX_LETTERS_PER_ROW, backgroundColor: TOASTIFY_ERROR_COLOR })
     }
 
     return displayLetterOnTheBoard(game, pressedKey)

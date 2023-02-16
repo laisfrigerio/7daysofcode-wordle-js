@@ -17,7 +17,9 @@ const {
     mockToastify, 
     unMockToastify, 
     toastifyDefaultConfig,
-    TOASTIFY_SUCCESS_COLOR
+    TOASTIFY_SUCCESS_COLOR,
+    TOASTIFY_ERROR_COLOR,
+    TOASTIFY_WARNING_COLOR
 } = require('./mocks/toastify')
 
 describe('Checking guess', () => {
@@ -35,7 +37,7 @@ describe('Checking guess', () => {
         unMockToastify()
     })
 
-    test('should return a "Empty guess" message because currentGuess attribute is empty', () => {
+    test('should show a notification with "Empty guess" message because currentGuess attribute is empty', () => {
         const game = {
             database,
             currentRow: 1,
@@ -44,10 +46,12 @@ describe('Checking guess', () => {
             rightGuess: 'lunch'
         }
 
-        expect(app.checkGuess(game)).toBe(NOTIFICATION_EMPTY_GUESS)
+        app.checkGuess(game)
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_EMPTY_GUESS, backgroundColor: TOASTIFY_ERROR_COLOR })
     })
 
-    test('should return a "Incomplete guess" message because currentGuess attribute size is less than 5 letter', () => {
+    test('should show notification with a "Incomplete guess" message because currentGuess attribute size is less than 5 letter', () => {
         const game = {
             database,
             currentRow: 1,
@@ -56,7 +60,9 @@ describe('Checking guess', () => {
             rightGuess: 'sorry'
         }
 
-        expect(app.checkGuess(game)).toBe(NOTIFICATION_INCOMPLETE_GUESS)
+        app.checkGuess(game)
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_INCOMPLETE_GUESS, backgroundColor: TOASTIFY_WARNING_COLOR })
     })
 
     test('should return a "Word not in database" message because currentGuess is not in database list', () => {
@@ -68,7 +74,9 @@ describe('Checking guess', () => {
             rightGuess: 'sorry'
         }
 
-        expect(app.checkGuess(game)).toBe(NOTIFICATION_WORD_NOT_IN_DATABASE)
+        app.checkGuess(game)
+        expect(global.Toastify).toHaveBeenCalled()
+        expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_WORD_NOT_IN_DATABASE, backgroundColor: TOASTIFY_WARNING_COLOR })
     })
 
     test('should return a "Enter key pressed" when current guess is not correct', () => {

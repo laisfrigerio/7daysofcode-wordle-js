@@ -1,4 +1,5 @@
 const { JSDOM } = require('jsdom')
+const path = require('path')
 const app = require('../resources/scripts/app')
 
 const NOTIFICATION_DISPLAY_LETTER_SUCCESSFULLY = 'Showing letter with success'
@@ -11,10 +12,17 @@ const NOTIFICATION_INVALID_PRESSED_KEY = 'Invalid Pressed Key'
 const NOTIFICATION_REACH_MAX_ATTEMPTS = 'Reach Max Attempts'
 const NOTIFICATION_REACH_MAX_LETTERS_PER_ROW = 'Reach Max letter per row'
 const NOTIFICATION_WORD_NOT_IN_DATABASE = 'Word not in database'
+const NOTIFICATION_GAME_OVER_GUESS_RIGHT = 'You guessed right! Game over!'
 
 const KEY_BACKSPACE = 'Backspace'
 const KEY_ENTER = 'Enter'
 const KEY_DELETE = 'Delete'
+
+const GREEN_COLOR_RGB = 'rgb(83, 141, 78)'
+
+const getGameBoardLetter = (index) => {
+    return global.document.querySelector(`.letter-${index}`).style.backgroundColor
+}
 
 describe('Testing on key pressed', () => {
     const database = ['agent', 'above', 'allow', 'lunch', 'money', 'sorry', 'today', 'worry']
@@ -27,12 +35,10 @@ describe('Testing on key pressed', () => {
         rightGuess: ''
     }
 
-    beforeEach(() => {
-        const dom = new JSDOM()
+    beforeEach(async () => {
+        const dom = await JSDOM.fromFile(path.resolve(__dirname, '..', 'index.html'))
         global.document = dom.window.document
         global.window = dom.window
-
-        jest.spyOn(global.document, "querySelector").mockReturnValue({})
     })
 
     afterEach(() => {
@@ -148,6 +154,22 @@ describe('Testing on key pressed', () => {
             expect(game.currentGuess).toBe('')
             expect(game.currentLetterPosition).toBe(1)
             expect(game.currentRow).toBe(2)
+        })
+
+        test('when the guess match with right guess', () => {
+            global.alert = jest.fn(() => NOTIFICATION_GAME_OVER_GUESS_RIGHT)
+
+            const game = { ...gameInitialConfig, currentLetterPosition: 6, currentGuess: 'allow', rightGuess: 'allow'}
+            expect(app.onKeyPressed(KEY_ENTER, game)).toBe(NOTIFICATION_GAME_OVER_GUESS_RIGHT)
+            expect(game.currentGuess).toBe('allow')
+            expect(game.currentLetterPosition).toBe(6)
+            expect(game.currentRow).toBe(1)
+
+            expect(getGameBoardLetter(1)).toBe(GREEN_COLOR_RGB)
+            expect(getGameBoardLetter(2)).toBe(GREEN_COLOR_RGB)
+            expect(getGameBoardLetter(3)).toBe(GREEN_COLOR_RGB)
+            expect(getGameBoardLetter(4)).toBe(GREEN_COLOR_RGB)
+            expect(getGameBoardLetter(5)).toBe(GREEN_COLOR_RGB)
         })
     })
 

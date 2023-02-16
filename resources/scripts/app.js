@@ -19,6 +19,7 @@ const NOTIFICATION_INVALID_PRESSED_KEY = 'Invalid Pressed Key'
 const NOTIFICATION_REACH_MAX_ATTEMPTS = 'Reach Max Attempts'
 const NOTIFICATION_REACH_MAX_LETTERS_PER_ROW = 'Reach Max letter per row'
 const NOTIFICATION_WORD_NOT_IN_DATABASE = 'Word not in database'
+const NOTIFICATION_GAME_OVER_GUESS_RIGHT = 'You guessed right! Game over!'
 
 const gameInitialConfig = {
     database: [],
@@ -149,7 +150,7 @@ const nextGuess = (game) => {
 }
 
 const checkGuess = (game) => {
-    const { database, currentLetterPosition, currentGuess } = game
+    const { database, currentLetterPosition, currentGuess, rightGuess } = game
 
     if (isCurrentGuessEmpty(currentGuess)) {
         return NOTIFICATION_EMPTY_GUESS
@@ -162,6 +163,14 @@ const checkGuess = (game) => {
     if (!isGuessInDatabase(currentGuess, database)) {
         return NOTIFICATION_WORD_NOT_IN_DATABASE
     }
+
+    if (isCorrectGuess(currentGuess, rightGuess)) {
+        displayColor(game)
+        setTimeout(() => alert(NOTIFICATION_GAME_OVER_GUESS_RIGHT), 250)
+        return NOTIFICATION_GAME_OVER_GUESS_RIGHT
+    }
+
+    displayColor(game)
 
     return nextGuess(game)
 }
@@ -238,10 +247,11 @@ const start = () => {
 
     window.onload = async () => {
         const database = await loadWords()
+        const rightGuess = getOneRandomWord(database)
 
-        const game = { ...gameInitialConfig, database }
+        const game = { ...gameInitialConfig, database, rightGuess }
         console.log(database)
-        console.log('get one random word: ', getOneRandomWord(database))
+        console.log('get one random word: ', rightGuess)
 
         document.addEventListener('keydown', (event) => onKeyPressed(event.key, game))
     }

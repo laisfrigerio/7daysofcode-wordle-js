@@ -115,6 +115,11 @@ describe('Checking guess', () => {
         expect(getGameBoardLetter(4)).toBe(GREEN_COLOR_RGB)
         expect(getGameBoardLetter(5)).toBe(GREEN_COLOR_RGB)
 
+        expect(getGameBoardLetter('s')).toBe(GREEN_COLOR_RGB)
+        expect(getGameBoardLetter('o')).toBe(GREEN_COLOR_RGB)
+        expect(getGameBoardLetter('r')).toBe(GREEN_COLOR_RGB)
+        expect(getGameBoardLetter('y')).toBe(GREEN_COLOR_RGB)
+
         expect(global.Toastify).toHaveBeenCalled()
         expect(global.Toastify).toHaveBeenCalledWith({ ...toastifyDefaultConfig, text: NOTIFICATION_GAME_OVER_GUESS_RIGHT, backgroundColor: TOASTIFY_SUCCESS_COLOR })
     })

@@ -9,11 +9,13 @@ describe('Get one random word', () => {
     test('should return the first word when 0.4 mock response', () => {
         jest.spyOn(global.Math, 'random').mockReturnValue(0.4);
         expect(app.getOneRandomWord(['allow', 'agree'])).toBe('allow')
+        expect(app.getOneRandomWord(['ALLOW', 'agree'])).toBe('allow')
     })
 
     test('should return the second word when 0.5 mock response', () => {
         jest.spyOn(global.Math, 'random').mockReturnValue(0.5);
         expect(app.getOneRandomWord(['allow', 'agree'])).toBe('agree')
+        expect(app.getOneRandomWord(['allow', 'Agree'])).toBe('agree')
     })
 
     test('should return the second word of list with 2 items', () => {

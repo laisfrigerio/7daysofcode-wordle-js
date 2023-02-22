@@ -32,12 +32,14 @@ body {
 } 
 
 .header {
+    background-color: var(--bg);
     border-bottom: 1px solid var(--border-color);
     height: 80px;
     left: 0;
     position: fixed;
     top: 0;
     width: 100%;
+    z-index: 10;
 }
 
 header {
@@ -131,4 +133,29 @@ main {
     display: none;
     font-weight: bold;
     padding: 10px 20px;
+}
+
+@media screen and (max-width: 414px) {
+    header {
+        justify-content: center;
+    }
+
+    .header {
+        height: 60px;
+    }
+
+    header img {
+        height: auto;
+        width: 40px;
+    }
+
+    .board-game {
+        margin-top: 30px;
+        width: 280px;
+    }
+
+    .board-game .row {
+        grid-template-columns: 52px 52px 52px 52px 52px;
+        height: 52px;
+    }
 }
